@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Ипотечный калькулятор</title>
+		<style type="text/css">
+			body {
+				font: 13px Arial, sans-serif;
+				margin: 0 auto;
+				padding: 5%;
+				max-width: 500px;
+			}
+
+			.form-item {
+				display: block;
+				margin: 0 0 10px;
+			}
+
+			.form-item__title {
+				display: block;
+				margin-bottom: 3px;
+				color: #666;
+			}
+
+			input[type="text"] {
+				width: 100%;
+				-moz-box-sizing: border-box;
+				-webkit-box-sizing: border-box;
+				box-sizing: border-box;
+			}
+
+			.form-submit-button {
+				float: left;
+			}
+
+			#result {
+				float: right;
+				font-weight: bold;
+				font-size: 14px;
+			}
+		</style>
+	</head>
+	<body>
+		<form>
+			<label class="form-item">
+				<span class="form-item__title">Сумма кредита (в рублях):</span>
+				<input type="text" name="sum" value="" autofocus required />
+			</label>
+
+			<label class="form-item">
+				<span class="form-item__title">Процентная ставка (в %):</span>
+				<input type="text" name="interest-rate" value="" required />
+			</label>
+
+			<label class="form-item">
+				<span class="form-item__title">Осталось месяцев платить (количество месяцев)</span>
+				<input type="text" name="remaining-months" value="" required />
+			</label>
+
+			<input type="submit" class="form-submit-button" value="Посчитать" />
+		</form>
+
+		<div id="result"></div>
+
+		<script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+		<script type="text/javascript">
+			(function($) {
+				$(document).ready(function() {
+					function formula(sum, interestRate, remainingMonths) {
+						return (sum * interestRate/12) / (1 - Math.pow(1 + interestRate/12, -remainingMonths));
+					}
+
+					var $form = $('form'),
+						$result = $('#result'),
+						$sumInput = $form.find('input[name="sum"]'),
+						$interestRateInput = $form.find('input[name="interest-rate"]'),
+						$remainingMonths = $form.find('input[name="remaining-months"]');
+
+					$form.submit(function(ev) {
+						ev.preventDefault();
+						var result = formula($sumInput.val(), $interestRateInput.val() / 100, $remainingMonths.val());
+						$result.html(result.toFixed(2));
+					});
+				});
+			})(jQuery);
+		</script>
+	</body>
+</html>
